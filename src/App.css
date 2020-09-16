@@ -44,15 +44,7 @@ li span.done {
   padding: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+.tooltip-color {
+  color: orange;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}

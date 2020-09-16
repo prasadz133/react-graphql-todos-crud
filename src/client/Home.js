@@ -1,10 +1,12 @@
-import React from 'react';
-import '../App.css';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import React from "react";
+import Tippy from "@tippyjs/react";
+import 'tippy.js/dist/tippy.css';
+import "../App.css";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 const READ_TODOS = gql`
-  query todos{
+  query todos {
     todos {
       id
       text
@@ -45,32 +47,65 @@ function Home() {
   return (
     <div className="App-header">
       <h3>Create New Todo</h3>
-      <form onSubmit={e => {
-        e.preventDefault();
-        createTodo({ variables: { text: input.value } });
-        input.value = '';
-        window.location.reload();
-      }}>
-        <input className="form-control" type="text" placeholder="Enter todo" ref={node => { input = node; }}></input>
-        <button className="btn btn-primary px-5 my-2 App" type="submit">Submit</button>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          createTodo({ variables: { text: input.value } });
+          input.value = "";
+          window.location.reload();
+        }}
+      >
+        <input
+          className="form-control"
+          type="text"
+          placeholder="Enter todo"
+          ref={(node) => {
+            input = node;
+          }}
+        ></input>
+        <button className="btn btn-primary px-5 my-2 App" type="submit">
+          Submit
+        </button>
       </form>
       <h2>Todo List</h2>
       <ul>
-        {data.todos.map((todo) =>
+        {data.todos.map((todo) => (
           <li key={todo.id} className="w-100">
-            <span className={todo.completed ? "done" : "pending"}>{todo.text}</span>
-            <button className="btn btn-sm btn-danger rounded-circle float-right"
-              style={{marginLeft: 10}}
+            <span className={todo.completed ? "done" : "pending"}>
+              {todo.text}
+            </span>
+            <button
+              className="btn btn-sm btn-danger rounded-circle float-right"
+              style={{ marginLeft: 10 }}
               onClick={() => {
-              deleteTodo({ variables: { id: todo.id } });
-              window.location.reload();
-            }}>X</button>
-            <button className={`btn btn-sm float-right ${todo.completed ? "btn-success" : "btn-info"}`} onClick={() => {
-              updateTodo({ variables: { id: todo.id } });
-              window.location.reload();
-            }}>{todo.completed ? <span>Completed</span> : <span>Not completed</span>}</button>
+                deleteTodo({ variables: { id: todo.id } });
+                window.location.reload();
+              }}
+            >
+              X
+            </button>
+            <button
+              className={`btn btn-sm float-right ${
+                todo.completed ? "btn-success" : "btn-info"
+              }`}
+              onClick={() => {
+                updateTodo({ variables: { id: todo.id } });
+                window.location.reload();
+              }}
+            >
+              {todo.completed ? (
+                <Tippy placement="left"
+                  content={<span style={{color: 'orange'}}>Mark as Not completed</span>}>
+                  <span>Completed</span>
+                </Tippy>
+              ) : (
+                <Tippy content="Mark as completed" placement="left" className="tooltip-color">
+                  <span>Not completed</span>
+                </Tippy>
+              )}
+            </button>
           </li>
-        )}
+        ))}
       </ul>
     </div>
   );
