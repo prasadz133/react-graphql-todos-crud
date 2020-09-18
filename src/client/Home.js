@@ -2,36 +2,8 @@ import React from "react";
 import Tippy from "@tippyjs/react";
 import 'tippy.js/dist/tippy.css';
 import "../App.css";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
-
-const READ_TODOS = gql`
-  query todos {
-    todos {
-      id
-      text
-      completed
-    }
-  }
-`;
-
-const CREATE_TODO = gql`
-  mutation CreateTodo($text: String!) {
-    createTodo(text: $text)
-  }
-`;
-
-const REMOVE_TODO = gql`
-  mutation RemoveTodo($id: String!) {
-    removeTodo(id: $id)
-  }
-`;
-
-const UPDATE_TODO = gql`
-  mutation UpdateTodo($id: String!) {
-    updateTodo(id: $id)
-  }
-`;
+import { useQuery, useMutation } from "@apollo/client";
+import { READ_TODOS, CREATE_TODO, REMOVE_TODO, UPDATE_TODO } from "./Graphql";
 
 function Home() {
   let input;
@@ -39,22 +11,25 @@ function Home() {
   const [createTodo] = useMutation(CREATE_TODO);
   const [deleteTodo] = useMutation(REMOVE_TODO);
   const [updateTodo] = useMutation(UPDATE_TODO);
+  // const client = useApolloClient();
 
-  if (loading) return <p>loading...</p>;
-  if (error) return <p>ERROR</p>;
-  if (!data) return <p>Not found</p>;
+
+  // if (loading) return <p>loading...</p>;
+  // if (error) return <p>ERROR</p>;
+  // if (!data) return <p>Not found</p>;
+
+  const addTodo = (e) => {
+    e.preventDefault();
+    createTodo({ variables: { text: input.value } });
+    input.value = "";
+    window.location.reload();
+  }
+  
 
   return (
     <div className="App-header">
       <h3>Create New Todo</h3>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          createTodo({ variables: { text: input.value } });
-          input.value = "";
-          window.location.reload();
-        }}
-      >
+      <form onSubmit={addTodo}>
         <input
           className="form-control"
           type="text"
@@ -68,7 +43,7 @@ function Home() {
         </button>
       </form>
       <h2>Todo List</h2>
-      <ul>
+      {/* <ul>
         {data.todos.map((todo) => (
           <li key={todo.id} className="w-100">
             <span className={todo.completed ? "done" : "pending"}>
@@ -106,7 +81,7 @@ function Home() {
             </button>
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 }
